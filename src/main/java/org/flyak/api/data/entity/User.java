@@ -5,7 +5,6 @@ import org.flyak.api.data.misc.Ranks;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
