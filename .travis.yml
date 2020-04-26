@@ -2,5 +2,12 @@ language: java
 install: true
 jdk:
   - openjdk11
+service:
+  - mysql
+
+before_script:
+  - mysql -e "DROP DATABASE IF EXISTS flyaktest;"
+  - mysql -e "CREATE DATABASE flyaktest;"
+
 script:
   - "./gradlew build --stacktrace"
