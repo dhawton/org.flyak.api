@@ -11,3 +11,18 @@ before_script:
 
 script:
   - "./gradlew build"
+  - docker build -t flyakorg/api .
+
+after_script:
+  - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_TAG" != "" ];
+    then docker tag flyakorg/api flyakorg/api:latest;
+    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+    docker push flyakorg/api:latest;
+    docker tag flyakorg/api:latest flyakorg/api:$TRAVIS_TAG;
+    docker push flyakorg/api:$TRAVIS_TAG;
+  fi
+  - if [ "$TRAVIS_BRANCH" == "dev" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    docker tag flyakorg/api flyakorg/api:devel;
+    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+    docker push flyakorg/api:devel;
+  fi
