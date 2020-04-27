@@ -20,9 +20,9 @@ after_script:
     docker push flyakorg/api:latest;
     docker tag flyakorg/api:latest flyakorg/api:$TRAVIS_TAG;
     docker push flyakorg/api:$TRAVIS_TAG;
-  fi
+    fi
   - if [ "$TRAVIS_BRANCH" == "dev" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker tag flyakorg/api flyakorg/api:devel;
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
     docker push flyakorg/api:devel;
-  fi
+    fi
