@@ -1,5 +1,7 @@
 package org.flyak.api.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -9,13 +11,13 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @Column(name="user_id")
-    private int user_id;
     @Column(name="role")
     private String role;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     public int getId() {
         return id;
@@ -23,14 +25,6 @@ public class Role {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
     }
 
     public String getRole() {
@@ -41,11 +35,11 @@ public class Role {
         this.role = role;
     }
 
-    public Collection<User> getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(Collection<User> users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
