@@ -10,4 +10,4 @@ before_script:
   - mysql -e "CREATE DATABASE flyaktest;"
 
 script:
-  - "./gradlew build --stacktrace"
+  - "./gradlew build"
