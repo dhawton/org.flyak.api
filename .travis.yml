@@ -14,7 +14,7 @@ script:
   - docker build -t flyakorg/api .
 
 after_script:
-  - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_TAG" != "" ];
+  - if [ "$TRAVIS_TAG" != "" ];
     then docker tag flyakorg/api flyakorg/api:latest;
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
     docker push flyakorg/api:latest;
