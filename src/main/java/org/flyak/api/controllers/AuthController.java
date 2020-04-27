@@ -43,7 +43,7 @@ public class AuthController {
     public ResponseEntity<TokenResponse> refresh(Authentication authentication) {
         String token = jwtUtils.generateJwtToken(authentication);
 
-        return new ResponseEntity<>(new TokenResponse(token, "Bearer", authentication.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponse(token, "Bearer"), HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -66,20 +66,20 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
         log.debug(String.format("Login successful for %s", userDetails.getUsername()));
-        return new ResponseEntity<>(new TokenResponse(jwt, "Bearer", userDetails.getUsername()), HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponse(jwt, "Bearer"), HttpStatus.OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest, Errors errors) {
         if (!registrationEnabled) {
-            log.warn(String.format("Registration attempted with username: %s, email: %s, while registrations are disabled.", registerRequest.getUsername(), registerRequest.getEmail()));
+            log.warn(String.format("Registration attempted with email: %s, while registrations are disabled.", registerRequest.getEmail()));
             throw new GeneralException("Not found", "", HttpStatus.NOT_FOUND);
         }
         if (errors.hasErrors()) {
             throw new ValidationException(errors);
         }
         authService.register(registerRequest);
-        log.info(String.format("User Registered (email='%s', username='%s'", registerRequest.getEmail(), registerRequest.getUsername()));
+        log.info(String.format("User Registered (email='%s')", registerRequest.getEmail()));
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
 }

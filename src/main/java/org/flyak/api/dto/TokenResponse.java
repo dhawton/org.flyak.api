@@ -3,12 +3,10 @@ package org.flyak.api.dto;
 public class TokenResponse {
     private String token;
     private String type = "Bearer";
-    private String username;
 
-    public TokenResponse(String token, String type, String username) {
+    public TokenResponse(String token, String type) {
         this.token = token;
         this.type = type;
-        this.username = username;
     }
 
     public String getToken() {
@@ -25,13 +23,5 @@ public class TokenResponse {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 }
