@@ -25,6 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api-docs/**", "/swagger-ui/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/user/{userId:\\d+}/**").hasRole("ADMIN")
+                .antMatchers("/user/all").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

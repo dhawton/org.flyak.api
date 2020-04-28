@@ -1,10 +1,12 @@
 package org.flyak.api.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.flyak.api.data.misc.Ranks;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,8 +21,11 @@ public class User {
     private long id;
     @Column(name = "email")
     private String email;
+    @JsonIgnore
     @Column(name = "password")
     private String password;
+    @Column(name = "name")
+    private String name;
     @Column(name = "verified")
     private Boolean verified;
     @Column(name = "verification_token")
@@ -34,19 +39,8 @@ public class User {
     @Column(name = "updated_at")
     private Date updated_at;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "roles",
-        joinColumns = {
-            @JoinColumn(
-                name = "user_id",
-                referencedColumnName = "id"
-            )
-        },
-        inverseJoinColumns = {
-            @JoinColumn(name="role")
-        }
-    )
-    private Collection<Role> roles;
+    @OneToMany(mappedBy="user")
+    private Set<Role> roles;
 
     public long getId() {
         return id;
@@ -54,14 +48,6 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return email;
-    }
-
-    public void setUsername(String email) {
-        this.email = email;
     }
 
     public String getEmail() {
@@ -128,12 +114,23 @@ public class User {
         this.updated_at = updated_at;
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @PreUpdate
+    public void setLastUpdate() {  this.updated_at = new Date(); }
 }
 

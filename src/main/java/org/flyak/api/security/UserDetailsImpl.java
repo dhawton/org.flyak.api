@@ -1,10 +1,15 @@
 package org.flyak.api.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.flyak.api.data.entity.Role;
 import org.flyak.api.data.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,18 +19,19 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String username;
     private String email;
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
+    private User user;
+    private Logger log = LoggerFactory.getLogger(UserDetailsImpl.class);
 
-    public UserDetailsImpl(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities, User user) {
         this.id = id;
-        this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.user = user;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -33,7 +39,7 @@ public class UserDetailsImpl implements UserDetails {
             .map(role -> new SimpleGrantedAuthority(role.getRole()))
             .collect(Collectors.toList());
 
-        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
+        return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), authorities, user);
     }
 
     public static long getSerialVersionUID() {
@@ -46,15 +52,16 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
+
+    public User getUser() { return user; }
 
     public String getEmail() {
         return email;
     }
 
     @Override
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;
     }
