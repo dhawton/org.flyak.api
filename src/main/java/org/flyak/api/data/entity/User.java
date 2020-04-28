@@ -24,6 +24,8 @@ public class User {
     @JsonIgnore
     @Column(name = "password")
     private String password;
+    @Column(name = "name")
+    private String name;
     @Column(name = "verified")
     private Boolean verified;
     @Column(name = "verification_token")
@@ -118,6 +120,14 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 
