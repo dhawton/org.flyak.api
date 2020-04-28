@@ -55,8 +55,10 @@ public class UserController {
         return new ResponseEntity<>(new PutUserResponse("OK", passwordChanged), HttpStatus.CREATED);
     }
 
-    @PutMapping()
-    public String put
+    @PutMapping("/{userId}")
+    public String putUserAdmin(@PathVariable Long userId, @RequestBody UserRequest newUser) {
+        return "Soon";
+    }
 
     @GetMapping("/all")
     public Iterable<User> getUsers() {
