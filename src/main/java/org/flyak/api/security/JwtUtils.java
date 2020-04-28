@@ -63,7 +63,6 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String token) {
-        log.debug("Checking token " + token);
         checkKeyOrBuild();
 
         try {
