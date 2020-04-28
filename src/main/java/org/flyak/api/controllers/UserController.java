@@ -5,6 +5,7 @@ import org.flyak.api.data.entity.User;
 import org.flyak.api.data.repository.UserRepository;
 import org.flyak.api.dto.PutUserResponse;
 import org.flyak.api.dto.UserRequest;
+import org.flyak.api.exception.GeneralException;
 import org.flyak.api.security.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,11 @@ public class UserController {
     @PutMapping()
     public ResponseEntity<PutUserResponse> putUser(@RequestBody UserRequest newUser, Principal principal) {
         boolean passwordChanged = false;
-        User user = this.userRepository.findByEmail(principal.getName());
+        Optional<User> optionalUser = this.userRepository.findByEmail(principal.getName());
+        if (!optionalUser.isPresent()) {
+            throw new GeneralException("User not found", "", HttpStatus.NOT_FOUND);
+        }
+        User user = optionalUser.get();
         user.setEmail(newUser.getEmail());
         user.setName(newUser.getName());
         if (newUser.getNewpassword() != null) {
