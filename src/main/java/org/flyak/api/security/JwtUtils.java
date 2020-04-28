@@ -35,7 +35,9 @@ public class JwtUtils {
         checkKeyOrBuild();
         UserDetailsImpl userPrincipal = (UserDetailsImpl)authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setSubject(userPrincipal.getId().toString())
+                .claim("name", userPrincipal.getUser().getName())
+                .claim("roles", userPrincipal.getAuthorities().toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + (60000 * Integer.parseInt(jwtLifetime))))
                 .setIssuer("org.flyak.api")
@@ -63,7 +65,6 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String token) {
-        log.debug("Checking token " + token);
         checkKeyOrBuild();
 
         try {
