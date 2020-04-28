@@ -2,15 +2,53 @@ package org.flyak.api.service;
 
 import org.flyak.api.data.entity.User;
 import org.flyak.api.data.repository.UserRepository;
+import org.flyak.api.dto.UserRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class UserService {
-    private final UserRepository userRepository;
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private User user;
+
+    @Transactional
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Transactional
-    public void getUser() {}
+    public void changeUser(Long id, UserRequest newUser) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setEmail(newUser.getEmail());
+            user.setName(newUser.getName());
+            if (newUser.isGenpassword()) {
+                this.changePassword(user, newUser.getNewpassword());
+            }
+            if (newUser.getNewpassword() != null && !newUser.isGenpassword()) {
+                if (BCrypt.checkpw(newUser.getPassword(), user.getPassword())) {
+                    this.changePassword(user, newUser.getNewpassword());
+                }
+            }
+            userRepository.save(user);
+        }
+    }
+
+    @Transactional
+    public void changePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 }

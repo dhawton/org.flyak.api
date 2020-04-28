@@ -2,9 +2,11 @@ package org.flyak.api.security;
 
 import org.flyak.api.data.entity.User;
 import org.flyak.api.data.repository.UserRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,9 +14,17 @@ import javax.transaction.Transactional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Async
+    @Transactional
+    public void changePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
     }
 
     @Transactional
