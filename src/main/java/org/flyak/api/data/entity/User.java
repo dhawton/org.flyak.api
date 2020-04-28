@@ -129,5 +129,8 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    @PreUpdate
+    public void setLastUpdate() {  this.updated_at = new Date(); }
 }
 
