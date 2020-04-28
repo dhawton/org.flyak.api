@@ -10,6 +10,7 @@ public class UserRequest {
     @NotEmpty()
     private String password;
     private String newpassword;
+    private boolean genpassword;
 
     public String getEmail() {
         return email;
@@ -41,5 +42,13 @@ public class UserRequest {
 
     public void setNewpassword(String newpassword) {
         this.newpassword = newpassword;
+    }
+
+    public boolean isGenpassword() {
+        return genpassword;
+    }
+
+    public void setGenpassword(boolean genpassword) {
+        this.genpassword = genpassword;
     }
 }
