@@ -3,10 +3,12 @@ package org.flyak.api.controllers;
 import com.sun.mail.iap.Response;
 import org.flyak.api.data.entity.User;
 import org.flyak.api.data.repository.UserRepository;
+import org.flyak.api.dto.GeneralStatusResponse;
 import org.flyak.api.dto.PutUserResponse;
 import org.flyak.api.dto.UserRequest;
 import org.flyak.api.exception.GeneralException;
 import org.flyak.api.security.UserDetailsImpl;
+import org.flyak.api.utils.PasswordGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -61,8 +63,40 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String putUserAdmin(@PathVariable Long userId, @RequestBody UserRequest newUser) {
-        return "Soon";
+    public ResponseEntity<PutUserResponse> putUserAdmin(@PathVariable Long userId, @RequestBody UserRequest newUser, Principal principal) {
+        boolean passwordChanged = false;
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+        if (!optionalUser.isPresent()) {
+            throw new GeneralException("User not found", "", HttpStatus.NOT_FOUND);
+        }
+
+        User user = optionalUser.get();
+        user.setEmail(newUser.getEmail());
+        user.setName(newUser.getName());
+
+        if (newUser.isGenpassword()) {
+            String newPassword = PasswordGenerator.generateRandomPassword(12);
+            user.setPassword(newPassword);
+            passwordChanged = true;
+            // @TODO This should get emailed to the pilot
+        }
+        userRepository.save(user);
+        log.info(String.format("User %s (%s) updated by %s", user.getId(), user.getEmail(), principal.getName()));
+
+        return new ResponseEntity<>(new PutUserResponse("OK", passwordChanged), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<GeneralStatusResponse> deleteUserAdmin(@PathVariable Long userId, Principal principal) {
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+        if (!optionalUser.isPresent()) {
+            throw new GeneralException("User not found", "", HttpStatus.NOT_FOUND);
+        }
+        User user = optionalUser.get();
+        log.info(String.format("User %s (%s) deleted by %s", user.getId(), user.getEmail(), principal.getName()));
+        userRepository.delete(user);
+
+        return new ResponseEntity<>(new GeneralStatusResponse("OK"), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/all")
