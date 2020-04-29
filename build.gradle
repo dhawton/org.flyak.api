@@ -37,6 +37,9 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-security:1.2.32'
 	runtimeOnly 'mysql:mysql-connector-java'
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
