@@ -1,5 +1,9 @@
 package org.flyak.api.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.flyak.api.dto.LoginRequest;
 import org.flyak.api.dto.RegisterRequest;
 import org.flyak.api.dto.TokenResponse;
@@ -39,6 +43,11 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
+    @Operation(description = "Request a new token.", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
+    })
     @GetMapping("/refresh")
     public ResponseEntity<TokenResponse> refresh(Authentication authentication) {
         String token = jwtUtils.generateJwtToken(authentication);
@@ -46,6 +55,10 @@ public class AuthController {
         return new ResponseEntity<>(new TokenResponse(token, "Bearer"), HttpStatus.OK);
     }
 
+    @Operation(description = "Login.", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
+    })
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest loginRequest, Errors errors) {
         if (errors.hasErrors()) {
@@ -69,6 +82,11 @@ public class AuthController {
         return new ResponseEntity<>(new TokenResponse(jwt, "Bearer"), HttpStatus.OK);
     }
 
+    @Operation(description = "Register new user.", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "309", description = "Conflict, generally email is already registered.", content = @Content()),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ValidationException.class)))
+    })
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest, Errors errors) {
         if (!registrationEnabled) {
