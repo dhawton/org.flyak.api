@@ -4,14 +4,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.flyak.api.data.misc.Mail;
 import org.flyak.api.dto.LoginRequest;
 import org.flyak.api.dto.RegisterRequest;
 import org.flyak.api.dto.TokenResponse;
+import org.flyak.api.exception.ErrorResponse;
 import org.flyak.api.exception.GeneralException;
 import org.flyak.api.exception.ValidationException;
 import org.flyak.api.security.JwtUtils;
 import org.flyak.api.security.UserDetailsImpl;
 import org.flyak.api.service.AuthService;
+import org.flyak.api.service.EmailService;
+import org.flyak.api.utils.TokenGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +29,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -36,11 +45,37 @@ public class AuthController {
     @Value("${app.registration.enabled}")
     private Boolean registrationEnabled;
     private Logger log = LoggerFactory.getLogger(AuthController.class);
+    @Value("${app.ui.baseurl}")
+    private String UIBaseURL;
+    @Value("${app.ui.registration_verification}")
+    private String UIRegVerificationURL;
+    private TokenGenerator tokenGenerator;
+    private EmailService emailService;
 
-    public AuthController(AuthService authService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthController(AuthService authService, AuthenticationManager authenticationManager, JwtUtils jwtUtils, EmailService emailService) {
         this.authService = authService;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.tokenGenerator = new TokenGenerator(12, new SecureRandom());
+        this.emailService = emailService;
+    }
+
+    @GetMapping("/test")
+    public void test() {
+        String token = tokenGenerator.nextString();
+
+        Mail mail = new Mail("daniel@hawton.org", "Welcome to FlyAK, Verify Registration", "email-registration");
+        Map<String,Object> props = new HashMap<>();
+        props.put("name", "Daniel Hawton");
+        props.put("verification_url", String.format("%s%s%s", UIBaseURL, UIRegVerificationURL, token));
+        mail.setProps(props);
+        try {
+            emailService.sendEmail(mail);
+        } catch(MessagingException e) {
+            log.error(String.format("Caught MessagingException during test %s", e.getCause()));
+        } catch(IOException e) {
+            log.error(String.format("Caught IOException during registration of %s", e.getLocalizedMessage()));
+        }
     }
 
     @Operation(description = "Request a new token.", responses = {
@@ -85,7 +120,7 @@ public class AuthController {
     @Operation(description = "Register new user.", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "309", description = "Conflict, generally email is already registered.", content = @Content()),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ValidationException.class)))
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest, Errors errors) {
