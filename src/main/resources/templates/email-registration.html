@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+  <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
+      <!-- use the font -->
+      <style>
+          body {
+              font-family: 'Roboto', sans-serif;
+          }
+      </style>
+  </head>
+  <body>
+    <p th:text="${'Dear ' + name}"></p>
+
+    <p>Thank you for joining FlyAK.Org.  To complete your registration request, you will need to validate your email address.</p>
+
+    <p>
+        Please go to <a th:href="${verification_url}">here</a> to verify your registration.
+    </p>
+  </body>
+</html>
