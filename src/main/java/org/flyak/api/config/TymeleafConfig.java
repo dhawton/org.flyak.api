@@ -24,6 +24,7 @@ public class TymeleafConfig {
         emailTemplateResolver.setSuffix(".html");
         emailTemplateResolver.setTemplateMode(TemplateMode.HTML);
         emailTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        emailTemplateResolver.setCacheable(false);
         return emailTemplateResolver;
     }
 }
