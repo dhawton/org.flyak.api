@@ -10,15 +10,21 @@ import org.flyak.api.data.repository.UserRepository;
 import org.flyak.api.dto.GeneralStatusResponse;
 import org.flyak.api.dto.UserRequest;
 import org.flyak.api.exception.GeneralException;
+import org.flyak.api.service.EmailService;
 import org.flyak.api.service.UserService;
 import org.flyak.api.utils.PasswordGenerator;
+import org.flyak.api.utils.TokenGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,10 +33,18 @@ public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserRepository userRepository;
     private final UserService userService;
+    private final EmailService emailService;
+    private final TokenGenerator tokenGenerator;
+    @Value("${app.ui.baseurl}")
+    private String UIBaseURL;
+    @Value("${app.ui.registration_verification}")
+    private String UIRegVerificationURL;
 
-    public UserController(UserRepository userRepository, UserService userService) {
+    public UserController(UserRepository userRepository, UserService userService, EmailService emailService) {
         this.userRepository = userRepository;
         this.userService = userService;
+        this.emailService = emailService;
+        this.tokenGenerator = new TokenGenerator(12, new SecureRandom());
     }
 
     @Operation(description = "Get authenticated user data.", responses = {
@@ -98,7 +112,10 @@ public class UserController {
             String newPassword = PasswordGenerator.generateRandomPassword(12);
             userService.changePassword(user, newPassword);
             log.info(String.format("User %s's password reset by %s", user.getId(), principal.getName()));
-            // @TODO This should get emailed to the pilot
+            Map<String, Object> props = new HashMap<>();
+            props.put("name", user.getName());
+            props.put("newpassword", newPassword);
+            emailService.generateEmailRequest(user.getEmail(), "Password has been reset", "email-passwordreset", props);
         }
 
         return new ResponseEntity<>(new GeneralStatusResponse("OK"), HttpStatus.CREATED);
