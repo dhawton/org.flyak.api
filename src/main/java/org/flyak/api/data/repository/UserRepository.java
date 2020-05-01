@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(String email);
-    Optional<User> findByVerification_token(String verification_token);
+    Optional<User> findByVerificationToken(String verification_token);
     Boolean existsByEmail(String email);
 }
