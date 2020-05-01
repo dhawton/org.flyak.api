@@ -29,7 +29,7 @@ public class User {
     @Column(name = "verified")
     private Boolean verified;
     @Column(name = "verification_token")
-    private String verification_token;
+    private String verificationToken;
     @Column(name = "hours")
     private float hours;
     @Column(name = "rank")
@@ -75,11 +75,11 @@ public class User {
     }
 
     public String getVerification_token() {
-        return verification_token;
+        return verificationToken;
     }
 
     public void setVerification_token(String verification_token) {
-        this.verification_token = verification_token;
+        this.verificationToken = verification_token;
     }
 
     public float getHours() {
