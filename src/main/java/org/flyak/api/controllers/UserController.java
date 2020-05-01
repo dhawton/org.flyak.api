@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.flyak.api.data.entity.User;
 import org.flyak.api.data.repository.UserRepository;
+import org.flyak.api.dto.ForgotPasswordRequest;
 import org.flyak.api.dto.GeneralStatusResponse;
 import org.flyak.api.dto.UserRequest;
 import org.flyak.api.exception.GeneralException;
