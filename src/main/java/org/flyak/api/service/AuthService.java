@@ -26,6 +26,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -64,6 +65,21 @@ public class AuthService {
         this.tokenGenerator = new TokenGenerator(12, new SecureRandom());
         this.emailService = emailService;
         this.userService = userService;
+    }
+
+    @Transactional
+    public Boolean verifyAccount(String token) {
+        Optional<User> userOptional = userRepository.findByVerification_token(token);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        User user = userOptional.get();
+        user.setVerified(true);
+        user.setVerification_token(null);
+        userRepository.save(user);
+
+        return true;
     }
 
     @Transactional
