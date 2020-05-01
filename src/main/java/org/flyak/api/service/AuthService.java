@@ -69,7 +69,7 @@ public class AuthService {
 
     @Transactional
     public Boolean verifyAccount(String token) {
-        Optional<User> userOptional = userRepository.findByVerification_token(token);
+        Optional<User> userOptional = userRepository.findByVerificationToken(token);
         if (userOptional.isEmpty()) {
             return false;
         }
