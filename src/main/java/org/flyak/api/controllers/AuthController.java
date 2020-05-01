@@ -169,4 +169,17 @@ public class AuthController {
 
         return new ResponseEntity<>(new GeneralStatusResponse("Not Found"), HttpStatus.NOT_FOUND);
     }
+
+    @PutMapping("/verify/{token}")
+    @Operation(description = "Verify registration token.", responses = {
+            @ApiResponse(responseCode = "202", description = "Accepted", content = @Content(schema = @Schema(implementation = GeneralStatusResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content())
+    })
+    public ResponseEntity<GeneralStatusResponse> verifyRegistrationToken(@PathVariable String token) {
+        Boolean result = authService.verifyAccount(token);
+
+        if (result) return new ResponseEntity<>(new GeneralStatusResponse("OK"), HttpStatus.ACCEPTED);
+
+        return new ResponseEntity<>(new GeneralStatusResponse("Not Found"), HttpStatus.NOT_FOUND);
+    }
 }
