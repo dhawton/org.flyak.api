@@ -20,17 +20,19 @@ public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String email;
+    private boolean isVerified = false;
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private User user;
     private Logger log = LoggerFactory.getLogger(UserDetailsImpl.class);
 
-    public UserDetailsImpl(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities, User user) {
+    public UserDetailsImpl(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities, Boolean isVerified, User user) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.isVerified = isVerified;
         this.user = user;
     }
 
@@ -39,7 +41,7 @@ public class UserDetailsImpl implements UserDetails {
             .map(role -> new SimpleGrantedAuthority(role.getRole()))
             .collect(Collectors.toList());
 
-        return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), authorities, user);
+        return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), authorities, user.getVerified(), user);
     }
 
     public static long getSerialVersionUID() {
@@ -82,7 +84,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.getVerified();
+        return isVerified;
     }
 
     @Override
