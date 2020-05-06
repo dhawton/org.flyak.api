@@ -5,6 +5,9 @@ jdk:
 service:
   - mysql
 
+env:
+  - LINE_VERSION=$(echo $TRAVIS_BRANCH | sed "s/line\///")
+
 before_script:
   - mysql -e "DROP DATABASE IF EXISTS flyaktest;"
   - mysql -e "CREATE DATABASE flyaktest;"
@@ -25,6 +28,11 @@ after_script:
     docker tag flyakorg/api flyakorg/api:devel;
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
     docker push flyakorg/api:devel;
+    fi
+  - if [ "$TRAVIS_BRANCH" == "line/"* ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    docker tag flyakorg/api flyakorg/api:dev-$LINE_VERSION;
+    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+    docker push flyakorg/api:dev-$LINE_VERSION;
     fi
 
 after_success:
