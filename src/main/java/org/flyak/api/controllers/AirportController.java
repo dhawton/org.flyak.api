@@ -1,52 +1,142 @@
 package org.flyak.api.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.flyak.api.data.misc.Mail;
-import org.flyak.api.dto.LoginRequest;
-import org.flyak.api.dto.RegisterRequest;
-import org.flyak.api.dto.TokenResponse;
-import org.flyak.api.exception.ErrorResponse;
+import org.flyak.api.data.entity.Airport;
+import org.flyak.api.data.repository.AirportRepository;
+import org.flyak.api.dto.AirportRequest;
+import org.flyak.api.dto.GeneralStatusResponse;
 import org.flyak.api.exception.GeneralException;
-import org.flyak.api.exception.ValidationException;
-import org.flyak.api.security.JwtUtils;
-import org.flyak.api.security.UserDetailsImpl;
-import org.flyak.api.service.AuthService;
-import org.flyak.api.service.EmailService;
-import org.flyak.api.utils.TokenGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.Column;
+import javax.websocket.server.PathParam;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/airport")
 public class AirportController {
+    private Logger log = LoggerFactory.getLogger(AirportController.class);
+    private AirportRepository airportRepository;
 
-
-    public AirportController(AuthService authService, AuthenticationManager authenticationManager, JwtUtils jwtUtils, EmailService emailService) {
-        this.authService = authService;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
-        this.tokenGenerator = new TokenGenerator(12, new SecureRandom());
-        this.emailService = emailService;
+    public AirportController(AirportRepository airportRepository) {
+        this.airportRepository = airportRepository;
     }
 
+    @GetMapping("/all")
+    @Operation(description = "Get all airports", responses = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = Airport.class)
+                            )
+                    )
+            )
+    })
+    public Iterable<Airport> getAirports() {
+        return this.airportRepository.findAll();
+    }
+
+    @GetMapping("/{icao}")
+    @Operation(
+            description = "Get airport details",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    schema = @Schema(implementation = Airport.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found",
+                            content = @Content()
+                    )
+            }
+    )
+    public Airport getAirport(@PathVariable String icao) {
+        Optional<Airport> airport = airportRepository.findByIcao(icao);
+        if (airport.isEmpty()) {
+            throw new GeneralException("Not Found", "", HttpStatus.NOT_FOUND);
+        }
+
+        return airport.get();
+    }
+
+    @DeleteMapping("/{icao}")
+    @Operation(
+            description = "Delete airport",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    schema = @Schema(implementation = GeneralStatusResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not Found",
+                            content = @Content()
+                    )
+            }
+    )
+    public ResponseEntity<GeneralStatusResponse> deleteAirport(@PathVariable String icao) {
+        Optional<Airport> optionalAirport = airportRepository.findByIcao(icao);
+        if (optionalAirport.isEmpty())
+            throw new GeneralException("Not Found", HttpStatus.NOT_FOUND);
+
+        airportRepository.delete(optionalAirport.get());
+        return new ResponseEntity<>(new GeneralStatusResponse("OK"), HttpStatus.OK);
+    }
+
+    @PutMapping()
+    @Operation(
+            description = "Add/Edit Airport",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = @Content(
+                                    schema = @Schema(implementation = GeneralStatusResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request",
+                            content = @Content()
+                    )
+            }
+    )
+    public ResponseEntity<? extends Object> putAirport(@RequestBody AirportRequest airportRequest) {
+        Airport airport;
+        Optional<Airport> optionalAirport = airportRepository.findByIcao(airportRequest.getIcao());
+        if (optionalAirport.isEmpty()) {
+            airport = new Airport();
+            airport.setIcao(airportRequest.getIcao());
+        } else {
+            airport = optionalAirport.get();
+        }
+
+        if (airportRequest.getNewIcao() != null) {
+            airport.setIcao(airportRequest.getNewIcao());
+        }
+        airport.setName(airportRequest.getName());
+        airport.setLat(airportRequest.getLat());
+        airport.setLon(airportRequest.getLon());
+
+        airportRepository.save(airport);
+
+        return new ResponseEntity<>(new GeneralStatusResponse("Created"), HttpStatus.CREATED);
+    }
 }
