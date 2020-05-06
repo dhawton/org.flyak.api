@@ -1,28 +1,27 @@
-package org.flyak.api.data.entity;
+package org.flyak.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.flyak.api.data.entity.Airport;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name="airports")
-public class Airport {
-    @Id
-    @JsonIgnore
+public class AirportRequest {
     private String icao;
-    @Column(name="name")
+    private String newIcao;
     private String name;
-    @Column(name="lat")
     private Double lat;
-    @Column(name="lon")
     private Double lon;
 
-    public String getId() {
-        return icao;
+    public AirportRequest(Airport airport) {
+        this.icao = airport.getIcao();
+        this.name = airport.getName();
+        this.lat = airport.getLat();
+        this.lon = airport.getLon();
     }
 
-    public void setId(String id) {
-        this.icao = icao;
+    public String getNewIcao() {
+        return newIcao;
+    }
+
+    public void setNewIcao(String newIcao) {
+        this.newIcao = newIcao;
     }
 
     public String getIcao() {
