@@ -29,7 +29,7 @@ after_script:
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
     docker push flyakorg/api:devel;
     fi
-  - if [ "$TRAVIS_BRANCH" == "line/"* ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+  - if [[ "$TRAVIS_BRANCH" == "line/"* ]] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker tag flyakorg/api flyakorg/api:dev-$LINE_VERSION;
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
     docker push flyakorg/api:dev-$LINE_VERSION;
