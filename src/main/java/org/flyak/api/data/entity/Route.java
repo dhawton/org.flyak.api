@@ -1,0 +1,135 @@
+package org.nzvirtual.api.data.entity;
+
+import javax.persistence.*;
+import java.sql.Time;
+
+@Entity
+@Table(name="airlines")
+public class Route {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    @OneToOne
+    @JoinColumn(name = "airline", referencedColumnName = "icao")
+    private Airline airline;
+    @Column(name = "flight_number")
+    private int flightNumber;
+    @OneToOne
+    @JoinColumn(name = "departure", referencedColumnName = "icao")
+    private Airport departure;
+    @OneToOne
+    @JoinColumn(name = "arrival", referencedColumnName = "icao")
+    private Airport arrival;
+    @Column(name = "days")
+    private String days;
+    @OneToOne
+    @JoinColumn(name = "equipment", referencedColumnName = "icao")
+    private Equipment equipment;
+    @Column(name = "departure_time")
+    private Time departureTime;
+    @Column(name = "duration")
+    private Time duration;
+    @Column(name = "routing")
+    private String routing;
+    @Column(name = "altitude")
+    private int altitude;
+    @Column(name = "notes")
+    private String notes;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Airline getAirline() {
+        return airline;
+    }
+
+    public void setAirline(Airline airline) {
+        this.airline = airline;
+    }
+
+    public int getFlightNumber() {
+        return flightNumber;
+    }
+
+    public void setFlightNumber(int flightNumber) {
+        this.flightNumber = flightNumber;
+    }
+
+    public Airport getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(Airport departure) {
+        this.departure = departure;
+    }
+
+    public Airport getArrival() {
+        return arrival;
+    }
+
+    public void setArrival(Airport arrival) {
+        this.arrival = arrival;
+    }
+
+    public String getDays() {
+        return days;
+    }
+
+    public void setDays(String days) {
+        this.days = days;
+    }
+
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Equipment equipment) {
+        this.equipment = equipment;
+    }
+
+    public Time getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(Time departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public Time getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Time duration) {
+        this.duration = duration;
+    }
+
+    public String getRouting() {
+        return routing;
+    }
+
+    public void setRouting(String routing) {
+        this.routing = routing;
+    }
+
+    public int getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(int altitude) {
+        this.altitude = altitude;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+}
