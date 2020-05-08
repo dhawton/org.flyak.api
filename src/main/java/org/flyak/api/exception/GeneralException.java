@@ -1,7 +1,6 @@
 package org.flyak.api.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.Errors;
 
 public class GeneralException extends RuntimeException {
     private final String details;
