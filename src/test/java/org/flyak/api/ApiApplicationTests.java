@@ -1,11 +1,20 @@
 package org.flyak.api;
 
+<<<<<<< Updated upstream:src/test/java/org/flyak/api/ApiApplicationTests.java
 import org.flyak.api.data.entity.User;
 import org.flyak.api.data.repository.UserRepository;
 import org.flyak.api.dto.UserRequest;
 import org.flyak.api.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+=======
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.nzvirtual.api.data.entity.User;
+import org.nzvirtual.api.data.repository.UserRepository;
+import org.nzvirtual.api.dto.UserRequest;
+import org.nzvirtual.api.service.UserService;
+>>>>>>> Stashed changes:src/test/java/org/nzvirtual/api/ApiApplicationTests.java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
