@@ -3,8 +3,8 @@ package org.flyak.api.data.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="airports")
-public class Airport {
+@Table(name="airlines")
+public class Airline {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,10 +13,6 @@ public class Airport {
     private String icao;
     @Column(name="name")
     private String name;
-    @Column(name="lat")
-    private Double lat;
-    @Column(name="lon")
-    private Double lon;
 
     public long getId() {
         return id;
@@ -40,21 +36,5 @@ public class Airport {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Double getLat() {
-        return lat;
-    }
-
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    public Double getLon() {
-        return lon;
-    }
-
-    public void setLon(Double lon) {
-        this.lon = lon;
     }
 }
