@@ -100,7 +100,7 @@ public class AirportController {
 
     @RequestMapping(
             value = {
-                "", "/"
+                ""
             },
             method = {
                     RequestMethod.POST,
