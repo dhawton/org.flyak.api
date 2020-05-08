@@ -15,7 +15,7 @@ plugins {
 
 apply plugin: 'com.byteowls.jasypt'
 
-group = 'org.flyak'
+group = 'org.nzvirtual'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
