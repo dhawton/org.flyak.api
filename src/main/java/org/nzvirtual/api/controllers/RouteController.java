@@ -44,13 +44,13 @@ public class RouteController {
 
     @Cacheable(value = "routes")
     @GetMapping("")
-    @Operation(description = "Get all equipment", responses = {
+    @Operation(description = "Get all routes", responses = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
                     content = @Content(
                             array = @ArraySchema(
-                                    schema = @Schema(implementation = Equipment.class)
+                                    schema = @Schema(implementation = Route.class)
                             )
                     )
             )
