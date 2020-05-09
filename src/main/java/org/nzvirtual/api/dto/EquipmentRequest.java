@@ -12,6 +12,12 @@ public class EquipmentRequest {
         this.name = equipment.getName();
     }
 
+    public EquipmentRequest(String icao, String newIcao, String name) {
+        this.icao = icao;
+        this.newIcao = newIcao;
+        this.name = name;
+    }
+
     public String getNewIcao() {
         return newIcao;
     }

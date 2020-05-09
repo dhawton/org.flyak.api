@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.nzvirtual.api.data.entity.User;
 import org.nzvirtual.api.data.misc.Mail;
 import org.nzvirtual.api.data.repository.UserRepository;
@@ -68,25 +69,7 @@ public class AuthController {
         this.emailService = emailService;
     }
 
-    @GetMapping("/test")
-    public void test() {
-        String token = tokenGenerator.nextString();
-
-        Mail mail = new Mail("daniel@hawton.org", "Welcome to FlyAK, Verify Registration", "email-registration");
-        Map<String,Object> props = new HashMap<>();
-        props.put("name", "Daniel Hawton");
-        props.put("verification_url", String.format("%s%s%s", UIBaseURL, UIRegVerificationURL, token));
-        mail.setProps(props);
-        try {
-            emailService.sendEmail(mail);
-        } catch(MessagingException e) {
-            log.error(String.format("Caught MessagingException during test %s", e.getCause()));
-        } catch(IOException e) {
-            log.error(String.format("Caught IOException during registration of %s", e.getLocalizedMessage()));
-        }
-    }
-
-    @Operation(description = "Request a new token.", responses = {
+    @Operation(description = "Request a new token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())

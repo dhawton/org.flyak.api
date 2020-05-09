@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Time;
 
 @Entity
-@Table(name="airlines")
+@Table(name="routes")
 public class Route {
     @Id
     @Column(name = "id")
@@ -27,9 +27,9 @@ public class Route {
     @JoinColumn(name = "equipment", referencedColumnName = "icao")
     private Equipment equipment;
     @Column(name = "departure_time")
-    private Time departureTime;
+    private String departureTime;
     @Column(name = "duration")
-    private Time duration;
+    private String duration;
     @Column(name = "routing")
     private String routing;
     @Column(name = "altitude")
@@ -93,19 +93,19 @@ public class Route {
         this.equipment = equipment;
     }
 
-    public Time getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Time departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public Time getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(Time duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 
