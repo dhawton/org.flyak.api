@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.nzvirtual.api.data.entity.Airport;
 import org.nzvirtual.api.data.repository.AirportRepository;
 import org.nzvirtual.api.dto.AirportRequest;
@@ -29,7 +30,7 @@ public class AirportController {
     }
 
     @GetMapping("/all")
-    @Operation(description = "Get all airports", responses = {
+    @Operation(description = "Get all airports", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
@@ -47,6 +48,7 @@ public class AirportController {
     @GetMapping("/{icao}")
     @Operation(
             description = "Get airport details",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -74,6 +76,7 @@ public class AirportController {
     @DeleteMapping("/{icao}")
     @Operation(
             description = "Delete airport",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -109,6 +112,7 @@ public class AirportController {
     )
     @Operation(
             description = "Add/Edit Airport",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "201",

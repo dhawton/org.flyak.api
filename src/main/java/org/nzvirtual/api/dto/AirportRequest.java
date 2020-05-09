@@ -16,6 +16,14 @@ public class AirportRequest {
         this.lon = airport.getLon();
     }
 
+    public AirportRequest(String icao, String newIcao, String name, Double lat, Double lon) {
+        this.icao = icao;
+        this.newIcao = newIcao;
+        this.name = name;
+        this.lat = lat;
+        this.lon = lon;
+    }
+
     public String getNewIcao() {
         return newIcao;
     }

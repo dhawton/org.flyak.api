@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.nzvirtual.api.data.entity.Equipment;
 import org.nzvirtual.api.data.repository.EquipmentRepository;
 import org.nzvirtual.api.dto.EquipmentRequest;
@@ -29,7 +30,7 @@ public class EquipmentController {
     }
 
     @GetMapping("/all")
-    @Operation(description = "Get all equipment", responses = {
+    @Operation(description = "Get all equipment", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
@@ -47,6 +48,7 @@ public class EquipmentController {
     @DeleteMapping("/{icao}")
     @Operation(
             description = "Delete equipment",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -82,6 +84,7 @@ public class EquipmentController {
     )
     @Operation(
             description = "Add/Edit Equipment",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "201",
