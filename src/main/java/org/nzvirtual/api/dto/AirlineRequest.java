@@ -12,6 +12,12 @@ public class AirlineRequest {
         this.name = airline.getName();
     }
 
+    public AirlineRequest(String icao, String newIcao, String name) {
+        this.icao = icao;
+        this.newIcao = newIcao;
+        this.name = name;
+    }
+
     public String getNewIcao() {
         return newIcao;
     }

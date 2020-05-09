@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.nzvirtual.api.data.entity.Airline;
 import org.nzvirtual.api.data.repository.AirlineRepository;
 import org.nzvirtual.api.dto.AirlineRequest;
@@ -29,7 +30,7 @@ public class AirlineController {
     }
 
     @GetMapping("/all")
-    @Operation(description = "Get all airlines", responses = {
+    @Operation(description = "Get all airlines", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
@@ -47,6 +48,7 @@ public class AirlineController {
     @DeleteMapping("/{icao}")
     @Operation(
             description = "Delete airline",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -82,6 +84,7 @@ public class AirlineController {
     )
     @Operation(
             description = "Add/Edit Airline",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "201",

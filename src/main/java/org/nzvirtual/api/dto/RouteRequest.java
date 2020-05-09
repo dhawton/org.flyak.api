@@ -1,7 +1,5 @@
 package org.nzvirtual.api.dto;
 
-import java.sql.Time;
-
 public class RouteRequest {
     private Long id;
     private String airline;
@@ -10,11 +8,29 @@ public class RouteRequest {
     private String arrival;
     private String days;
     private String equipment;
-    private Time departureTime;
-    private Time duration;
+    private String departureTime;
+    private String duration;
     private String route;
     private int altitude;
     private String notes;
+
+    public RouteRequest(Long id, String airline, int flightNumber, String departure, String arrival, String days, String equipment, String departureTime, String duration, String route, int altitude, String notes) {
+        this.id = 0L;
+        if (id != null) {
+            this.id = id;
+        }
+        this.airline = airline;
+        this.flightNumber = flightNumber;
+        this.departure = departure;
+        this.arrival = arrival;
+        this.days = days;
+        this.equipment = equipment;
+        this.departureTime = departureTime;
+        this.duration = duration;
+        this.route = route;
+        this.altitude = altitude;
+        this.notes = notes;
+    }
 
     public Long getId() {
         return id;
@@ -72,19 +88,19 @@ public class RouteRequest {
         this.equipment = equipment;
     }
 
-    public Time getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Time departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public Time getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(Time duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

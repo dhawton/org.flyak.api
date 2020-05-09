@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.nzvirtual.api.data.entity.Airline;
 import org.nzvirtual.api.data.entity.Airport;
 import org.nzvirtual.api.data.entity.Equipment;
@@ -44,7 +45,7 @@ public class RouteController {
 
     @Cacheable(value = "routes")
     @GetMapping("")
-    @Operation(description = "Get all routes", responses = {
+    @Operation(description = "Get all routes", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
@@ -63,6 +64,7 @@ public class RouteController {
     @CacheEvict(value = "routes")
     @Operation(
             description = "Delete route",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -99,6 +101,7 @@ public class RouteController {
     )
     @Operation(
             description = "Add/Edit Route",
+            security = { @SecurityRequirement(name = "bearerAuth") },
             responses = {
                     @ApiResponse(
                             responseCode = "201",
@@ -114,7 +117,7 @@ public class RouteController {
                     )
             }
     )
-    public ResponseEntity<? extends Object> putEquipment(@RequestBody RouteRequest routeRequest) {
+    public ResponseEntity<? extends Object> putRoute(@RequestBody RouteRequest routeRequest) {
         Airline airline;
         Route route;
 

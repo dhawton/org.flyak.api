@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.nzvirtual.api.data.entity.User;
 import org.nzvirtual.api.data.repository.UserRepository;
 import org.nzvirtual.api.dto.GeneralStatusResponse;
@@ -47,7 +48,7 @@ public class UserController {
         this.tokenGenerator = new TokenGenerator(12, new SecureRandom());
     }
 
-    @Operation(description = "Get authenticated user data.", responses = {
+    @Operation(description = "Get authenticated user data.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = User.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
@@ -58,7 +59,7 @@ public class UserController {
         return this.userRepository.findByEmail(email);
     }
 
-    @Operation(tags = { "admin" }, description = "Update {userId} user.", responses = {
+    @Operation(tags = { "admin" }, security = { @SecurityRequirement(name = "bearerAuth") }, description = "Update {userId} user.", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = User.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
@@ -73,7 +74,7 @@ public class UserController {
          return user.get();
     }
 
-    @Operation(description = "Update authenticated user.", responses = {
+    @Operation(description = "Update authenticated user.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = GeneralStatusResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
@@ -92,7 +93,7 @@ public class UserController {
         return new ResponseEntity<>(new GeneralStatusResponse("OK"), HttpStatus.CREATED);
     }
 
-    @Operation(tags = { "admin" }, description = "Update {userId} user.", responses = {
+    @Operation(tags = { "admin" }, description = "Update {userId} user.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = GeneralStatusResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
@@ -121,7 +122,7 @@ public class UserController {
         return new ResponseEntity<>(new GeneralStatusResponse("OK"), HttpStatus.CREATED);
     }
 
-    @Operation(tags = { "admin" }, description = "Delete {userId} user.", responses = {
+    @Operation(tags = { "admin" }, description = "Delete {userId} user.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "202", content = @Content(schema = @Schema(implementation = GeneralStatusResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
@@ -140,7 +141,7 @@ public class UserController {
         return new ResponseEntity<>(new GeneralStatusResponse("OK"), HttpStatus.ACCEPTED);
     }
 
-    @Operation(tags = { "admin" }, description = "Get list of users.", responses = {
+    @Operation(tags = { "admin" }, description = "Get list of users.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(arraySchema = @Schema(implementation = GeneralStatusResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
