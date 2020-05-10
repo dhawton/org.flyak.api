@@ -12,11 +12,11 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @OneToOne
-    @JoinColumn(name = "route", referencedColumnName = "route_id")
+    @JoinColumn(name = "route", referencedColumnName = "id")
     private Route route;
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "user", referencedColumnName = "user_id")
+    @JoinColumn(name = "user", referencedColumnName = "id")
     private User user;
 
     public long getId() {

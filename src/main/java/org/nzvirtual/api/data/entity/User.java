@@ -39,7 +39,7 @@ public class User {
 
     @OneToMany(mappedBy="user")
     private Set<Role> roles;
-    @OneToMany(mappedBy = "booking")
+    @OneToMany(mappedBy="user")
     private Set<Booking> bookings;
 
     public long getId() {
