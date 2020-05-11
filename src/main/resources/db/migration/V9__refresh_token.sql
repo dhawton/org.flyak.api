@@ -1,0 +1,8 @@
+CREATE TABLE refreshtokens(
+  id BIGINT(21) UNSIGNED NOT NULL AUTO_INCREMENT,
+  token CHAR(36),
+  user_id BIGINT(21) UNSIGNED,
+  created_at DATETIME,
+
+  PRIMARY KEY(id)
+);

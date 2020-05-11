@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,11 +75,28 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
     })
-    @GetMapping("/refresh")
-    public ResponseEntity<TokenResponse> refresh(Authentication authentication) {
+    @GetMapping("/refresh/{refreshToken}")
+    public ResponseEntity<TokenResponse> refresh(@PathVariable String refreshToken, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
+        User authUser = userDetails.getUser();
+
+        User user;
+
+        try {
+            user = authService.lookupToken(refreshToken);
+        } catch (Exception e) {
+            throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        if (user.getId() != authUser.getId()) {
+            throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
+        }
+
         String token = jwtUtils.generateJwtToken(authentication);
 
-        return new ResponseEntity<>(new TokenResponse(token, "Bearer"), HttpStatus.OK);
+        authService.deleteToken(refreshToken);
+
+        return new ResponseEntity<>(new TokenResponse(token, "Bearer", authService.createRefreshToken(user)), HttpStatus.OK);
     }
 
     @Operation(description = "Login.", responses = {
@@ -105,7 +123,7 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
         log.debug(String.format("Login successful for %s", userDetails.getUsername()));
-        return new ResponseEntity<>(new TokenResponse(jwt, "Bearer"), HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponse(jwt, "Bearer", authService.createRefreshToken(userDetails.getUser())), HttpStatus.OK);
     }
 
     @Operation(description = "Register new user.", responses = {

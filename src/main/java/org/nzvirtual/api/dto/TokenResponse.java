@@ -2,11 +2,13 @@ package org.nzvirtual.api.dto;
 
 public class TokenResponse {
     private String token;
+    private String refreshToken;
     private String type = "Bearer";
 
-    public TokenResponse(String token, String type) {
+    public TokenResponse(String token, String type, String refreshToken) {
         this.token = token;
         this.type = type;
+        this.refreshToken = refreshToken;
     }
 
     public String getToken() {
@@ -23,5 +25,13 @@ public class TokenResponse {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
