@@ -1,10 +1,11 @@
 package org.nzvirtual.api.data.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="equipment")
-public class Equipment {
+public class Equipment implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

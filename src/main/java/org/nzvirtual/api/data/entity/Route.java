@@ -1,11 +1,12 @@
 package org.nzvirtual.api.data.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Time;
 
 @Entity
 @Table(name="routes")
-public class Route {
+public class Route implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

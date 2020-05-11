@@ -3,9 +3,11 @@ package org.nzvirtual.api.dto;
 public class BookingRequest {
     private Long routeId;
 
-    public BookingRequest(Long routeId) {
-        this.routeId = routeId;
+    public BookingRequest(long routeId) {
+        this.routeId = Long.valueOf(routeId);
     }
+
+    public BookingRequest() {}
 
     public Long getRouteId() {
         return routeId;
