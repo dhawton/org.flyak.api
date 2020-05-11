@@ -1,9 +1,11 @@
 package org.nzvirtual.api.service;
 
 import org.nzvirtual.api.data.entity.PasswordReset;
+import org.nzvirtual.api.data.entity.RefreshToken;
 import org.nzvirtual.api.data.entity.User;
 import org.nzvirtual.api.data.misc.Mail;
 import org.nzvirtual.api.data.repository.PasswordResetRepository;
+import org.nzvirtual.api.data.repository.RefreshTokenRepository;
 import org.nzvirtual.api.data.repository.UserRepository;
 import org.nzvirtual.api.dto.LoginRequest;
 import org.nzvirtual.api.dto.RegisterRequest;
@@ -12,6 +14,7 @@ import org.nzvirtual.api.utils.TokenGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,10 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AuthService {
@@ -32,6 +32,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordResetRepository passwordResetRepository;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final TokenGenerator tokenGenerator;
     @Value("${app.ui.baseurl}")
     private String UIBaseURL;
@@ -48,7 +49,8 @@ public class AuthService {
                        UserRepository userRepository,
                        AuthenticationManager authenticationManager,
                        EmailService emailService,
-                       UserService userService) {
+                       UserService userService,
+                       RefreshTokenRepository refreshTokenRepository) {
         this.passwordEncoder = passwordEncoder;
         this.passwordResetRepository = passwordResetRepository;
         this.userRepository = userRepository;
@@ -56,6 +58,7 @@ public class AuthService {
         this.tokenGenerator = new TokenGenerator(12, new SecureRandom());
         this.emailService = emailService;
         this.userService = userService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Transactional
@@ -92,6 +95,37 @@ public class AuthService {
 
         passwordResetRepository.delete(passwordResetOptional.get());
         return true;
+    }
+
+    @Transactional
+    public String createRefreshToken(User user) {
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setUser(user);
+        refreshTokenRepository.save(refreshToken);
+
+        return refreshToken.getToken();
+    }
+
+    @Transactional
+    public User lookupToken(String token) throws Exception {
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByToken(token);
+        if (optionalRefreshToken.isEmpty())
+            throw new Exception("Not Found");
+
+        return optionalRefreshToken.get().getUser();
+    }
+
+    @Transactional
+    @Async
+    public void deleteToken(String token) {
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByToken(token);
+        if (optionalRefreshToken.isEmpty()) {
+            log.error("Attempted to invalidate token " + token + " but it doesn't exist.");
+            return;
+        }
+
+        refreshTokenRepository.delete(optionalRefreshToken.get());
     }
 
     @Transactional
