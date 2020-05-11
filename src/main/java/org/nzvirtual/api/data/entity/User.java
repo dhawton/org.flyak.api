@@ -39,6 +39,8 @@ public class User {
 
     @OneToMany(mappedBy="user")
     private Set<Role> roles;
+    @OneToMany(mappedBy="user")
+    private Set<Booking> bookings;
 
     public long getId() {
         return id;
@@ -126,6 +128,22 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public Set<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(Set<Booking> bookings) {
+        this.bookings = bookings;
     }
 
     @PreUpdate

@@ -1,0 +1,10 @@
+CREATE TABLE bookings(
+    id BIGINT(21) UNSIGNED AUTO_INCREMENT,
+    user_id BIGINT(21) UNSIGNED,
+    route_id BIGINT(21) UNSIGNED,
+    created_at DATETIME,
+
+    PRIMARY KEY(id)
+);
+
+ALTER TABLE bookings ADD CONSTRAINT user_bookings FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;
