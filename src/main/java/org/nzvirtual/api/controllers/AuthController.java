@@ -94,10 +94,10 @@ public class AuthController {
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
         } catch(AuthenticationException e) {
-            log.warn("Authentication failed for: " + loginRequest.getUsername());
+            log.warn("Authentication failed for: " + loginRequest.getEmail());
             throw new GeneralException("Authentication Failed", "", HttpStatus.FORBIDDEN);
         }
 
