@@ -1,0 +1,1 @@
+ALTER TABLE users CHANGE COLUMN verification_token verification_token VARCHAR(12);
