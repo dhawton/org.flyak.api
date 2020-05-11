@@ -123,6 +123,8 @@ public class BookingController {
 
         booking.setUser(optUser.get());
         booking.setRoute(optRoute.get());
+        bookingRepository.save(booking);
+
         return new ResponseEntity<>(new GeneralStatusResponse("Created"), HttpStatus.CREATED);
     }
 }

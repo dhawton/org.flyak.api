@@ -1,10 +1,11 @@
 package org.nzvirtual.api.data.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="airports")
-public class Airport {
+public class Airport implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
