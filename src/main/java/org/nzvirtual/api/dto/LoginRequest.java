@@ -4,16 +4,16 @@ import javax.validation.constraints.NotEmpty;
 
 public class LoginRequest {
     @NotEmpty(message="Email required")
-    private String Username;
+    private String email;
     @NotEmpty(message="Password required")
     private String password;
 
-    public String getUsername() {
-        return Username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        Username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

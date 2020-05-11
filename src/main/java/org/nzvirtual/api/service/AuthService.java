@@ -122,12 +122,13 @@ public class AuthService {
 
         User user = new User();
         user.setEmail(registerRequest.getEmail());
+        user.setName(registerRequest.getName());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setVerified(false);
         user.setVerification_token(token);
         userRepository.save(user);
 
-        Mail mail = new Mail(user.getEmail(), "Welcome to FlyAK, Verify Registration", "email-registration");
+        Mail mail = new Mail(user.getEmail(), "Welcome to NZVirtual, Verify Registration", "email-registration");
         Map<String,Object> props = new HashMap<>();
         props.put("name", user.getName());
         props.put("verification_url", String.format("%s%s%s", UIBaseURL, UIRegVerificationPath, token));
