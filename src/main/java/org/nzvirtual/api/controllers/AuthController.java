@@ -70,6 +70,50 @@ public class AuthController {
         this.emailService = emailService;
     }
 
+    @Operation(description = "Delete all user's refresh token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content())
+    })
+    @DeleteMapping("/refresh")
+    public ResponseEntity<GeneralStatusResponse> deleteAllRefresh(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User authUser = userDetails.getUser();
+
+        authService.blacklistRefreshTokenForUser(authUser);
+
+        return new ResponseEntity<GeneralStatusResponse>(new GeneralStatusResponse("OK"), HttpStatus.OK);
+    }
+
+    @Operation(description = "Delete a refresh token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content())
+    })
+    @DeleteMapping("/refresh/{refreshToken}")
+    public ResponseEntity<GeneralStatusResponse> deleteRefresh(@PathVariable String refreshToken, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User authUser = userDetails.getUser();
+
+        User user;
+
+        try {
+            user = authService.lookupToken(refreshToken);
+        } catch (Exception e) {
+            throw new GeneralException("Not Found", HttpStatus.NOT_FOUND);
+        }
+
+        if (user.getId() != authUser.getId()) {
+            authService.blacklistRefreshTokenForUser(authUser);
+            authService.blacklistRefreshTokenForUser(user);
+            throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        authService.deleteToken(refreshToken);
+
+        return new ResponseEntity<GeneralStatusResponse>(new GeneralStatusResponse("OK"), HttpStatus.OK);
+    }
+
     @Operation(description = "Request a new token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
