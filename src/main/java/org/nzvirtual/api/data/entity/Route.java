@@ -29,6 +29,8 @@ public class Route implements Serializable {
     private Equipment equipment;
     @Column(name = "departure_time")
     private String departureTime;
+    @Column(name = "arrival_time")
+    private String arrivalTime;
     @Column(name = "duration")
     private String duration;
     @Column(name = "routing")
@@ -100,6 +102,14 @@ public class Route implements Serializable {
 
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
+    }
+
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 
     public String getDuration() {
