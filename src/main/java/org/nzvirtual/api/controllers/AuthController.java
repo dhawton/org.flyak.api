@@ -77,26 +77,31 @@ public class AuthController {
     })
     @GetMapping("/refresh/{refreshToken}")
     public ResponseEntity<TokenResponse> refresh(@PathVariable String refreshToken, Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
-        User authUser = userDetails.getUser();
+        User authUser = null;
+
+        if(authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            authUser = userDetails.getUser();
+        }
 
         User user;
 
         try {
             user = authService.lookupToken(refreshToken);
         } catch (Exception e) {
+            // Token doesn't exist.
             throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
         }
 
-        if (user.getId() != authUser.getId()) {
+        if (authUser != null && user.getId() != authUser.getId()) {
+            log.warn(String.format("Got refresh token, but authenicated user %s does not match associated user %s. Unwhitelisting user's refresh tokens.", user.getEmail(), authUser.getEmail()));
+            authService.blacklistRefreshTokenForUser(user);
             throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
         }
 
-        String token = jwtUtils.generateJwtToken(authentication);
+        String token = jwtUtils.generateJwtToken(user);
 
-        authService.deleteToken(refreshToken);
-
-        return new ResponseEntity<>(new TokenResponse(token, "Bearer", authService.createRefreshToken(user)), HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponse(token, "Bearer", null), HttpStatus.OK);
     }
 
     @Operation(description = "Login.", responses = {

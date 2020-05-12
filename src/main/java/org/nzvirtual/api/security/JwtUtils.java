@@ -3,6 +3,7 @@ package org.nzvirtual.api.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import org.nzvirtual.api.data.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,20 @@ public class JwtUtils {
             byte[] keyBytes = Base64.getDecoder().decode(jwtSecret);
             this.key = Keys.hmacShaKeyFor(keyBytes);
         }
+    }
+
+    public String generateJwtToken(User user) {
+        checkKeyOrBuild();
+        return Jwts.builder()
+                .setSubject(String.valueOf(user.getId()))
+                .claim("name", user.getName())
+                .claim("roles", user.getRoles().toString())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + (60000 * Integer.parseInt(jwtLifetime))))
+                .setIssuer("org.nzvirtual.api")
+                .setAudience("flyak")
+                .signWith(this.key, SignatureAlgorithm.HS512)
+                .compact();
     }
 
     public String generateJwtToken(Authentication authentication) {
