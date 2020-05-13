@@ -15,6 +15,8 @@ public class Route implements Serializable {
     private Airline airline;
     @Column(name = "flight_number")
     private int flightNumber;
+    @Column(name = "atc_ident")
+    private String atcIdent;
     @OneToOne
     @JoinColumn(name = "departure", referencedColumnName = "icao")
     private Airport departure;
@@ -61,6 +63,14 @@ public class Route implements Serializable {
 
     public void setFlightNumber(int flightNumber) {
         this.flightNumber = flightNumber;
+    }
+
+    public String getAtcIdent() {
+        return atcIdent;
+    }
+
+    public void setAtcIdent(String atc_ident) {
+        this.atcIdent = atc_ident;
     }
 
     public Airport getDeparture() {

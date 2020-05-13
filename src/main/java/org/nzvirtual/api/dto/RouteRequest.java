@@ -4,6 +4,7 @@ public class RouteRequest {
     private Long id;
     private String airline;
     private int flightNumber;
+    private String atcIdent;
     private String departure;
     private String arrival;
     private String days;
@@ -15,13 +16,14 @@ public class RouteRequest {
     private int altitude;
     private String notes;
 
-    public RouteRequest(Long id, String airline, int flightNumber, String departure, String arrival, String days, String equipment, String departureTime, String arrivalTime, String duration, String route, int altitude, String notes) {
+    public RouteRequest(Long id, String airline, int flightNumber, String AtcIdent, String departure, String arrival, String days, String equipment, String departureTime, String arrivalTime, String duration, String route, int altitude, String notes) {
         this.id = 0L;
         if (id != null) {
             this.id = id;
         }
         this.airline = airline;
         this.flightNumber = flightNumber;
+        this.atcIdent = AtcIdent;
         this.departure = departure;
         this.arrival = arrival;
         this.days = days;
@@ -56,6 +58,14 @@ public class RouteRequest {
 
     public void setFlightNumber(int flightNumber) {
         this.flightNumber = flightNumber;
+    }
+
+    public String getAtcIdent() {
+        return atcIdent;
+    }
+
+    public void setAtcIdent(String atcIdent) {
+        this.atcIdent = atcIdent;
     }
 
     public String getDeparture() {
