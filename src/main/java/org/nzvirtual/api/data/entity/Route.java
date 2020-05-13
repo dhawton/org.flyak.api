@@ -1,5 +1,9 @@
 package org.nzvirtual.api.data.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.annotations.Type;
+import org.nzvirtual.api.data.misc.Days;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -21,8 +25,20 @@ public class Route implements Serializable {
     @OneToOne
     @JoinColumn(name = "arrival", referencedColumnName = "icao")
     private Airport arrival;
-    @Column(name = "days")
-    private String days;
+    @Column(name="monday")
+    private boolean monday;
+    @Column(name="tuesday")
+    private boolean tuesday;
+    @Column(name="wednesday")
+    private boolean wednesday;
+    @Column(name="thursday")
+    private boolean thursday;
+    @Column(name="friday")
+    private boolean friday;
+    @Column(name="saturday")
+    private boolean saturday;
+    @Column(name="sunday")
+    private boolean sunday;
     @OneToOne
     @JoinColumn(name = "equipment", referencedColumnName = "icao")
     private Equipment equipment;
@@ -79,12 +95,60 @@ public class Route implements Serializable {
         this.arrival = arrival;
     }
 
-    public String getDays() {
-        return days;
+    public boolean isMonday() {
+        return monday;
     }
 
-    public void setDays(String days) {
-        this.days = days;
+    public void setMonday(boolean monday) {
+        this.monday = monday;
+    }
+
+    public boolean isTuesday() {
+        return tuesday;
+    }
+
+    public void setTuesday(boolean tuesday) {
+        this.tuesday = tuesday;
+    }
+
+    public boolean isWednesday() {
+        return wednesday;
+    }
+
+    public void setWednesday(boolean wednesday) {
+        this.wednesday = wednesday;
+    }
+
+    public boolean isThursday() {
+        return thursday;
+    }
+
+    public void setThursday(boolean thursday) {
+        this.thursday = thursday;
+    }
+
+    public boolean isFriday() {
+        return friday;
+    }
+
+    public void setFriday(boolean friday) {
+        this.friday = friday;
+    }
+
+    public boolean isSaturday() {
+        return saturday;
+    }
+
+    public void setSaturday(boolean saturday) {
+        this.saturday = saturday;
+    }
+
+    public boolean isSunday() {
+        return sunday;
+    }
+
+    public void setSunday(boolean sunday) {
+        this.sunday = sunday;
     }
 
     public Equipment getEquipment() {

@@ -153,8 +153,15 @@ public class RouteController {
         route.setDeparture(departureAirportOptional.get());
         route.setArrival(arrivalAirportOptional.get());
         route.setEquipment(equipmentOptional.get());
-        route.setDays(routeRequest.getDays());
+        route.setMonday(routeRequest.isMonday());
+        route.setTuesday(routeRequest.isTuesday());
+        route.setWednesday(routeRequest.isWednesday());
+        route.setThursday(routeRequest.isThursday());
+        route.setFriday(routeRequest.isFriday());
+        route.setSaturday(routeRequest.isSaturday());
+        route.setSunday(routeRequest.isSunday());
         route.setDepartureTime(routeRequest.getDepartureTime());
+        route.setArrivalTime(routeRequest.getArrivalTime());
         route.setDuration(routeRequest.getDuration());
         route.setRouting(routeRequest.getRoute());
         route.setAltitude(routeRequest.getAltitude());
