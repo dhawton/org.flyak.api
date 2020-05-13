@@ -9,12 +9,13 @@ public class RouteRequest {
     private String days;
     private String equipment;
     private String departureTime;
+    private String arrivalTime;
     private String duration;
     private String route;
     private int altitude;
     private String notes;
 
-    public RouteRequest(Long id, String airline, int flightNumber, String departure, String arrival, String days, String equipment, String departureTime, String duration, String route, int altitude, String notes) {
+    public RouteRequest(Long id, String airline, int flightNumber, String departure, String arrival, String days, String equipment, String departureTime, String arrivalTime, String duration, String route, int altitude, String notes) {
         this.id = 0L;
         if (id != null) {
             this.id = id;
@@ -26,6 +27,7 @@ public class RouteRequest {
         this.days = days;
         this.equipment = equipment;
         this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
         this.duration = duration;
         this.route = route;
         this.altitude = altitude;
