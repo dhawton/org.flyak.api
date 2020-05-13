@@ -14,6 +14,8 @@ public class UserRequest {
     private String newpassword;
     private boolean genpassword;
 
+    public UserRequest() {}
+
     public UserRequest(@NotEmpty(message = "Email required") String email, @NotEmpty() String firstname, @NotEmpty() String lastname, @NotEmpty() String password, String newpassword, boolean genpassword) {
         this.email = email;
         this.firstname = firstname;

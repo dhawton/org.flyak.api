@@ -6,26 +6,21 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.nzvirtual.api.data.entity.Airline;
 import org.nzvirtual.api.data.entity.Booking;
 import org.nzvirtual.api.data.entity.Route;
 import org.nzvirtual.api.data.entity.User;
-import org.nzvirtual.api.data.repository.AirlineRepository;
 import org.nzvirtual.api.data.repository.BookingRepository;
 import org.nzvirtual.api.data.repository.RouteRepository;
 import org.nzvirtual.api.data.repository.UserRepository;
-import org.nzvirtual.api.dto.AirlineRequest;
 import org.nzvirtual.api.dto.BookingRequest;
 import org.nzvirtual.api.dto.GeneralStatusResponse;
 import org.nzvirtual.api.exception.GeneralException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Book;
 import java.security.Principal;
 import java.util.Optional;
 
