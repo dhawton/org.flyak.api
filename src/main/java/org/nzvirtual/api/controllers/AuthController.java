@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,16 +70,82 @@ public class AuthController {
         this.emailService = emailService;
     }
 
+    @Operation(description = "Delete all user's refresh token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content())
+    })
+    @DeleteMapping("/refresh")
+    public ResponseEntity<GeneralStatusResponse> deleteAllRefresh(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User authUser = userDetails.getUser();
+
+        authService.blacklistRefreshTokenForUser(authUser);
+
+        return new ResponseEntity<GeneralStatusResponse>(new GeneralStatusResponse("OK"), HttpStatus.OK);
+    }
+
+    @Operation(description = "Delete a refresh token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content())
+    })
+    @DeleteMapping("/refresh/{refreshToken}")
+    public ResponseEntity<GeneralStatusResponse> deleteRefresh(@PathVariable String refreshToken, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User authUser = userDetails.getUser();
+
+        User user;
+
+        try {
+            user = authService.lookupToken(refreshToken);
+        } catch (Exception e) {
+            throw new GeneralException("Not Found", HttpStatus.NOT_FOUND);
+        }
+
+        if (user.getId() != authUser.getId()) {
+            authService.blacklistRefreshTokenForUser(authUser);
+            authService.blacklistRefreshTokenForUser(user);
+            throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        authService.deleteToken(refreshToken);
+
+        return new ResponseEntity<GeneralStatusResponse>(new GeneralStatusResponse("OK"), HttpStatus.OK);
+    }
+
     @Operation(description = "Request a new token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
     })
-    @GetMapping("/refresh")
-    public ResponseEntity<TokenResponse> refresh(Authentication authentication) {
-        String token = jwtUtils.generateJwtToken(authentication);
+    @GetMapping("/refresh/{refreshToken}")
+    public ResponseEntity<TokenResponse> refresh(@PathVariable String refreshToken, Authentication authentication) {
+        User authUser = null;
 
-        return new ResponseEntity<>(new TokenResponse(token, "Bearer"), HttpStatus.OK);
+        if(authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            authUser = userDetails.getUser();
+        }
+
+        User user;
+
+        try {
+            user = authService.lookupToken(refreshToken);
+        } catch (Exception e) {
+            // Token doesn't exist.
+            throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        if (authUser != null && user.getId() != authUser.getId()) {
+            log.warn(String.format("Got refresh token, but authenicated user %s does not match associated user %s. Unwhitelisting user's refresh tokens.", user.getEmail(), authUser.getEmail()));
+            authService.blacklistRefreshTokenForUser(user);
+            throw new GeneralException("Forbidden", HttpStatus.FORBIDDEN);
+        }
+
+        String token = jwtUtils.generateJwtToken(user);
+
+        return new ResponseEntity<>(new TokenResponse(token, "Bearer", null), HttpStatus.OK);
     }
 
     @Operation(description = "Login.", responses = {
@@ -105,7 +172,7 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
         log.debug(String.format("Login successful for %s", userDetails.getUsername()));
-        return new ResponseEntity<>(new TokenResponse(jwt, "Bearer"), HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponse(jwt, "Bearer", authService.createRefreshToken(userDetails.getUser())), HttpStatus.OK);
     }
 
     @Operation(description = "Register new user.", responses = {
