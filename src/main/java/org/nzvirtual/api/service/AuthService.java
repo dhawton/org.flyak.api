@@ -162,7 +162,8 @@ public class AuthService {
 
         User user = new User();
         user.setEmail(registerRequest.getEmail());
-        user.setName(registerRequest.getName());
+        user.setFirstname(registerRequest.getFirstname());
+        user.setLastname(registerRequest.getLastname());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setVerified(false);
         user.setVerification_token(token);

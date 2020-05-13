@@ -31,7 +31,8 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setEmail(newUser.getEmail());
-            user.setName(newUser.getName());
+            user.setFirstname(newUser.getFirstname());
+            user.setLastname(newUser.getLastname());
             if (newUser.isGenpassword()) {
                 this.changePassword(user, newUser.getNewpassword());
             }

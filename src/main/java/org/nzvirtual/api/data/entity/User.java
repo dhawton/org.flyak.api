@@ -22,8 +22,10 @@ public class User {
     @JsonIgnore
     @Column(name = "password")
     private String password;
-    @Column(name = "name")
-    private String name;
+    @Column(name = "firstname")
+    private String firstname;
+    @Column(name = "lastname")
+    private String lastname;
     @Column(name = "verified")
     private Boolean verified;
     @Column(name = "verification_token")
@@ -123,11 +125,23 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return String.format("%s %s", getFirstname(), getLastname());
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getVerificationToken() {
