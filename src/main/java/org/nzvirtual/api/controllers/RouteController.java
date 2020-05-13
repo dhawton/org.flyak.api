@@ -16,7 +16,9 @@ import org.nzvirtual.api.data.repository.EquipmentRepository;
 import org.nzvirtual.api.data.repository.RouteRepository;
 import org.nzvirtual.api.dto.GeneralStatusResponse;
 import org.nzvirtual.api.dto.RouteRequest;
+import org.nzvirtual.api.dto.RouteResponse;
 import org.nzvirtual.api.exception.GeneralException;
+import org.nzvirtual.api.service.RouteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,8 +38,10 @@ public class RouteController {
     private AirportRepository airportRepository;
     private EquipmentRepository equipmentRepository;
     private AirlineRepository airlineRepository;
+    private RouteService routeService;
 
-    public RouteController(RouteRepository routeRepository, AirportRepository airportRepository, EquipmentRepository equipmentRepository, AirlineRepository airlineRepository) {
+    public RouteController(RouteService routeService, RouteRepository routeRepository, AirportRepository airportRepository, EquipmentRepository equipmentRepository, AirlineRepository airlineRepository) {
+        this.routeService = routeService;
         this.routeRepository = routeRepository;
         this.equipmentRepository = equipmentRepository;
         this.airlineRepository = airlineRepository;
@@ -51,13 +56,13 @@ public class RouteController {
                     description = "OK",
                     content = @Content(
                             array = @ArraySchema(
-                                    schema = @Schema(implementation = Route.class)
+                                    schema = @Schema(implementation = RouteResponse.class)
                             )
                     )
             )
     })
-    public Iterable<Route> getRoutes() {
-        return this.routeRepository.findAll();
+    public List<RouteResponse> getRoutes() {
+        return routeService.getRoutes();
     }
 
     @DeleteMapping("/{id}")
