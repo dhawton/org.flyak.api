@@ -49,7 +49,7 @@ class ApiApplicationTests {
 		userRequest.setGenpassword(true);
 		userRequest.setNewpassword("test1111");
 		userRequest.setFirstname("Test");
-		userRequest.setFirstname("User Changed");
+		userRequest.setLastname("User Changed");
 
 		userService.changeUser(this.testUser, userRequest);
 
