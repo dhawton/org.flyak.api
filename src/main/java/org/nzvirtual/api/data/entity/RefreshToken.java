@@ -1,6 +1,7 @@
 package org.nzvirtual.api.data.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="refreshtokens")
@@ -14,6 +15,8 @@ public class RefreshToken {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    @Column(name = "created_at")
+    private Date created_at;
 
     public long getId() {
         return id;
@@ -37,5 +40,19 @@ public class RefreshToken {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void touch() {
+        this.created_at = new Date();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.created_at = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.created_at = new Date();
     }
 }

@@ -64,7 +64,7 @@ public class AuthController {
     }
 
     @Operation(description = "Delete all user's refresh token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content())
     })
@@ -79,7 +79,7 @@ public class AuthController {
     }
 
     @Operation(description = "Delete a refresh token.", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content()),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content())
     })
