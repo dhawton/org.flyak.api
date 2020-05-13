@@ -129,6 +129,12 @@ public class AuthService {
     }
 
     @Transactional
+    @Async
+    public void blacklistRefreshTokenForUser(User user) {
+        refreshTokenRepository.deleteByUser(user);
+    }
+
+    @Transactional
     public void forgotPassword(User user) {
         String token = tokenGenerator.nextString();
 
