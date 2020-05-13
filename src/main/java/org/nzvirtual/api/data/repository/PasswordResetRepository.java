@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,5 +16,5 @@ public interface PasswordResetRepository extends CrudRepository<PasswordReset, L
     Optional<PasswordReset> findByToken(String token);
 
     @Query("SELECT p FROM PasswordReset p WHERE p.created_at < :expiredDate")
-    List<PasswordReset> findExpiredTokens(@Param("expiredDate") LocalDateTime expiredDate);
+    List<PasswordReset> findExpiredTokens(@Param("expiredDate") Date expiredDate);
 }

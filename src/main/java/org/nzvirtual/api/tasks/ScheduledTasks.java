@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -33,7 +34,8 @@ class ScheduledTasks {
     @Transactional
     void checkExpiredTokens() {
         LocalDate date = LocalDate.now().plusWeeks(2);
-        List<RefreshToken> refreshTokens = refreshTokenRepository.findExpiredTokens(date);
+        Date newDate = java.sql.Date.valueOf(date);
+        List<RefreshToken> refreshTokens = refreshTokenRepository.findExpiredTokens(newDate);
         refreshTokenRepository.deleteAll(refreshTokens);
     }
 
@@ -41,7 +43,8 @@ class ScheduledTasks {
     @Transactional
     void checkExpiredResetTokens() {
         LocalDateTime dateTime = LocalDateTime.now().plusMinutes(15);
-        List<PasswordReset> refreshTokens = passwordResetRepository.findExpiredTokens(dateTime);
+        Date newDate = java.sql.Timestamp.valueOf(dateTime);
+        List<PasswordReset> refreshTokens = passwordResetRepository.findExpiredTokens(newDate);
         passwordResetRepository.deleteAll(refreshTokens);
     }
 }

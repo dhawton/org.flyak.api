@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +18,5 @@ public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Lon
     long deleteByUser(User user);
 
     @Query("SELECT r FROM RefreshToken r WHERE created_at < :expiredDate")
-    List<RefreshToken> findExpiredTokens(@Param("expiredDate") LocalDate expiredDate);
+    List<RefreshToken> findExpiredTokens(@Param("expiredDate") Date expiredDate);
 }
