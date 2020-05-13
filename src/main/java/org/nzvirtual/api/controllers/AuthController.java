@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.nzvirtual.api.data.entity.User;
-import org.nzvirtual.api.data.misc.Mail;
 import org.nzvirtual.api.data.repository.UserRepository;
 import org.nzvirtual.api.dto.*;
 import org.nzvirtual.api.exception.ErrorResponse;
@@ -17,7 +16,6 @@ import org.nzvirtual.api.security.UserDetailsImpl;
 import org.nzvirtual.api.service.AuthService;
 import org.nzvirtual.api.service.EmailService;
 import org.nzvirtual.api.utils.TokenGenerator;
-import org.nzvirtual.api.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,13 +29,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.security.Principal;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController

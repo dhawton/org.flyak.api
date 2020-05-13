@@ -1,11 +1,11 @@
 package org.nzvirtual.api;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.nzvirtual.api.data.entity.User;
 import org.nzvirtual.api.data.repository.UserRepository;
 import org.nzvirtual.api.dto.UserRequest;
 import org.nzvirtual.api.service.UserService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -34,7 +34,8 @@ class ApiApplicationTests {
 	@Test
 	void userTests() {
 		User user = new User();
-		user.setName("Test User");
+		user.setFirstname("Test");
+		user.setLastname("User");
 		user.setEmail("test@flyak.test");
 		user.setPassword(passwordEncoder.encode("test1234"));
 		userRepository.save(user);
@@ -47,7 +48,8 @@ class ApiApplicationTests {
 		userRequest.setEmail("test2@flyak.test");
 		userRequest.setGenpassword(true);
 		userRequest.setNewpassword("test1111");
-		userRequest.setName("Test User Changed");
+		userRequest.setFirstname("Test");
+		userRequest.setLastname("User Changed");
 
 		userService.changeUser(this.testUser, userRequest);
 

@@ -1,0 +1,2 @@
+ALTER TABLE users CHANGE COLUMN name firstname VARCHAR(255);
+ALTER TABLE users ADD COLUMN lastname VARCHAR(255) AFTER firstname;

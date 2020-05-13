@@ -1,7 +1,6 @@
 package org.nzvirtual.api.data.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name="refreshtokens")
