@@ -16,6 +16,6 @@ public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Lon
     Optional<RefreshToken> findByToken(String token);
     long deleteByUser(User user);
 
-    @Query("SELECT r FROM refreshtokens r WHERE created_at < :expiredDate")
+    @Query("SELECT r FROM RefreshToken r WHERE created_at < :expiredDate")
     List<RefreshToken> findExpiredTokens(@Param("expiredDate") LocalDate expiredDate);
 }

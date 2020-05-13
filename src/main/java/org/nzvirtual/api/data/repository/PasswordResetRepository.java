@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface PasswordResetRepository extends CrudRepository<PasswordReset, Long> {
     Optional<PasswordReset> findByToken(String token);
 
-    @Query("SELECT r FROM password_resets r WHERE created_at < :expiredDate")
+    @Query("SELECT p FROM PasswordReset p WHERE p.created_at < :expiredDate")
     List<PasswordReset> findExpiredTokens(@Param("expiredDate") LocalDateTime expiredDate);
 }
