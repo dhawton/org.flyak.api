@@ -14,7 +14,7 @@ before_script:
 
 script:
   - "./gradlew build"
-  - echo "$LINE_VERSION-$TRAVIS_COMMIT" > /tmp/gitinfo
+  - echo "$LINE_VERSION-$TRAVIS_COMMIT" > build/libs/gitinfo
   - docker build -t flyakorg/api .
 
 after_script:
