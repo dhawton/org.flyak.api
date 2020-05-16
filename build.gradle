@@ -41,22 +41,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+	implementation 'com.amazonaws:aws-java-sdk-core:1.11.783'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.11.783'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-}
-
-ext {
-	set('springCloudVersion', "Hoxton.SR4")
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
 }
 
 test {
