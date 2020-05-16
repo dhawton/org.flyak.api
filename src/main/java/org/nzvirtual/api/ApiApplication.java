@@ -11,12 +11,31 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 @SpringBootApplication
 @EnableScheduling
 public class ApiApplication {
+	private static String version;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
+
+		try {
+			setVersion(new String(Files.readAllBytes(Paths.get("/app/gitinfo"))));
+		} catch (IOException e) {
+			setVersion("Unknown");
+		}
+	}
+
+	public static String getVersion() {
+		return version;
+	}
+
+	public static void setVersion(String version) {
+		ApiApplication.version = version;
 	}
 
 	@Bean
