@@ -7,7 +7,7 @@ service:
 
 env:
   - LINE_VERSION=$(echo $TRAVIS_BRANCH | sed "s/line\///")
-  - SHORT_HASH=$(echo "$TRAVIS_COMMIT" |  cut -c1-7)
+  - SHORT_HASH=$(git rev-parse --short HEAD)
 
 before_script:
   - mysql -e "DROP DATABASE IF EXISTS flyaktest;"
@@ -15,6 +15,7 @@ before_script:
 
 script:
   - "./gradlew build"
+  - echo $SHORT_HASH
   - echo "$LINE_VERSION-$SHORT_HASH" > build/libs/gitinfo
   - docker build -t flyakorg/api .
 
