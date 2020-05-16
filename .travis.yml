@@ -6,8 +6,8 @@ service:
   - mysql
 
 env:
-  - LINE_VERSION=$(echo $TRAVIS_BRANCH | sed "s/line\///")
-  - SHORT_HASH=$(git rev-parse --short HEAD)
+  - LINEVERSION=$(echo $TRAVIS_BRANCH | sed "s/line\///")
+  - SHORTHASH=$(git rev-parse --short HEAD)
 
 before_script:
   - mysql -e "DROP DATABASE IF EXISTS flyaktest;"
@@ -15,8 +15,7 @@ before_script:
 
 script:
   - "./gradlew build"
-  - echo $SHORT_HASH
-  - echo "$LINE_VERSION-$SHORT_HASH" > build/libs/gitinfo
+  - echo "${LINEVERSION}-${SHORTHASH}" > build/libs/gitinfo
   - docker build -t flyakorg/api .
 
 after_script:
@@ -33,9 +32,9 @@ after_script:
     docker push flyakorg/api:devel;
     fi
   - if [[ "$TRAVIS_BRANCH" == "line/"* ]] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    docker tag flyakorg/api flyakorg/api:dev-$LINE_VERSION;
+    docker tag flyakorg/api flyakorg/api:dev-$LINEVERSION;
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push flyakorg/api:dev-$LINE_VERSION;
+    docker push flyakorg/api:dev-$LINEVERSION;
     fi
 
 after_success:
