@@ -15,7 +15,7 @@ before_script:
 
 script:
   - "./gradlew build"
-  - echo "${LINEVERSION}-${SHORTHASH}" > build/libs/gitinfo
+  - git rev-parse --short HEAD > build/libs/gitinfo
   - docker build -t flyakorg/api .
 
 after_script:
