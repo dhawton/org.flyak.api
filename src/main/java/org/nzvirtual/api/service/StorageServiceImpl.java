@@ -41,6 +41,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Async
+    @Override
     public void upload(String key, MultipartFile multipartFile, File file) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
@@ -59,11 +60,10 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public void delete(String key) {
-        Optional<File> optionalFile = fileRepository.findByKey(key);
-        if (optionalFile.isEmpty())
-            return;
+        File file = fileRepository.findByKey(key);
+        if (file == null) return;
 
         s3client.deleteObject(new DeleteObjectRequest(bucket, key));
-        fileRepository.delete(optionalFile.get());
+        fileRepository.delete(file);
     }
 }
