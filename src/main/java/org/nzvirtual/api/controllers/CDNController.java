@@ -42,7 +42,7 @@ public class CDNController {
                     description = "OK",
                     content = @Content(
                             array = @ArraySchema(
-                                    schema = @Schema(implementation = Route.class)
+                                    schema = @Schema(implementation = File.class)
                             )
                     )
             )
@@ -53,6 +53,13 @@ public class CDNController {
 
     @PostMapping("{key}")
     @CacheEvict(value="files")
+    @Operation(tags = { "cdn" }, description = "Add/edit file", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "CREATED",
+                    content = @Content()
+            )
+    })
     public ResponseEntity<GeneralStatusResponse> postFile(@PathVariable(required = true) String key, @RequestParam(value="file", required=true)MultipartFile multipartFile) throws IOException {
         storageService.upload(key, multipartFile);
 
@@ -61,6 +68,18 @@ public class CDNController {
 
     @DeleteMapping("{key}")
     @CacheEvict(value="files")
+    @Operation(tags = { "cdn" }, description = "Get list of files in cdn", security = { @SecurityRequirement(name = "bearerAuth") }, responses = {
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content()
+            ),
+            @ApiResponse(
+                    responseCode = "202",
+                    description = "OK",
+                    content = @Content()
+            )
+    })
     public ResponseEntity<GeneralStatusResponse> deleteFile(@PathVariable(required = true) String key) throws Exception {
         storageService.delete(key);
 
