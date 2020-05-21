@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.nzvirtual.api.data.misc.Ranks;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -159,6 +161,16 @@ User {
 
     public void setBookings(Set<Booking> bookings) {
         this.bookings = bookings;
+    }
+
+    public List<String> getRolesArray() {
+        Set<Role> roles = getRoles();
+        List<String> ret = new ArrayList<>();
+        for (Role role : roles) {
+            ret.add(role.getRole());
+        }
+
+        return ret;
     }
 
     @PreUpdate
