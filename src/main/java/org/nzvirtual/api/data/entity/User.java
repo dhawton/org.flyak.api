@@ -12,7 +12,8 @@ import java.util.Set;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "email")
         })
-public class User {
+public class
+User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

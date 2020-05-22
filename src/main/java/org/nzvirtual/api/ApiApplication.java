@@ -35,7 +35,7 @@ public class ApiApplication {
 	}
 
 	public static void setVersion(String version) {
-		ApiApplication.version = version;
+		ApiApplication.version = version.trim();
 	}
 
 	@Bean
@@ -43,9 +43,9 @@ public class ApiApplication {
 		return new OpenAPI()
 				.components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme().type(SecurityScheme.Type.HTTP).bearerFormat("JWT").scheme("bearer")))
 				.info(new Info()
-						.title("FlyAK API")
+						.title("NZ Virtual API")
 						.version(appVersion)
-						.description("This is the API for interfacing with the FlyAK Web Services")
+						.description("This is the API for interfacing with the NZ Virtual Web Services")
 						.license(new License().name("MIT")));
 	}
 }
