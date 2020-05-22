@@ -9,11 +9,13 @@ import org.nzvirtual.api.data.repository.RefreshTokenRepository;
 import org.nzvirtual.api.data.repository.UserRepository;
 import org.nzvirtual.api.dto.LoginRequest;
 import org.nzvirtual.api.dto.RegisterRequest;
+import org.nzvirtual.api.exception.GeneralException;
 import org.nzvirtual.api.utils.PasswordGenerator;
 import org.nzvirtual.api.utils.TokenGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -159,9 +161,19 @@ public class AuthService {
         );
     }
 
+    public boolean register(RegisterRequest registerRequest) {
+        Optional<User> optionalUser = userRepository.findByEmail(registerRequest.getEmail());
+        if (optionalUser.isPresent()) {
+            throw new GeneralException("User exists", HttpStatus.CONFLICT);
+        }
+
+        handleRegister(registerRequest);
+        return true;
+    }
+
     @Transactional
     @Async
-    public void register(RegisterRequest registerRequest) {
+    public void handleRegister(RegisterRequest registerRequest) {
         String token = tokenGenerator.nextString();
 
         User user = new User();
