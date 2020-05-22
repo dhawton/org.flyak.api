@@ -54,7 +54,7 @@ public class EmailService {
         String html = springTemplateEngine.process(mail.getTemplate(), context);
 
         mimeMessageHelper.setTo(mail.getMailTo());
-        mimeMessageHelper.setFrom(new InternetAddress("FlyAK <no-reply@flyak.org>"));
+        mimeMessageHelper.setFrom(new InternetAddress("NZ Virtual <no-reply@nzvirtual.org>"));
         mimeMessageHelper.setSubject(mail.getSubject());
         mimeMessageHelper.setText(html, true);
 
