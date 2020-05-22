@@ -35,7 +35,7 @@ public class ApiApplication {
 	}
 
 	public static void setVersion(String version) {
-		ApiApplication.version = version;
+		ApiApplication.version = version.trim();
 	}
 
 	@Bean
