@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,7 @@ import java.security.SecureRandom;
 import java.util.*;
 
 @Service
+@EnableAsync
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -135,6 +137,7 @@ public class AuthService {
     }
 
     @Transactional
+    @Async
     public void forgotPassword(User user) {
         String token = tokenGenerator.nextString();
 
@@ -157,6 +160,7 @@ public class AuthService {
     }
 
     @Transactional
+    @Async
     public void register(RegisterRequest registerRequest) {
         String token = tokenGenerator.nextString();
 
