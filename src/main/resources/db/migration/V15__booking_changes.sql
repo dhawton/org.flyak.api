@@ -1,5 +1,5 @@
-DROP TABLE bookings;
-DROP TABLE logbook;
+DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS logbook;
 
 CREATE TABLE bookings(
     id BIGINT(21) UNSIGNED AUTO_INCREMENT,
@@ -13,7 +13,7 @@ CREATE TABLE bookings(
     departure_time VARCHAR(5),
     arrival_time VARCHAR(5),
     duration VARCHAR(5),
-    planned_departure TIMESTAMP,
+    planned_departure TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY(id)
 );
@@ -30,8 +30,8 @@ CREATE TABLE logbook(
   planned_arrival VARCHAR(4),
   actual_arrival VARCHAR(4),
   equipment VARCHAR(4),
-  offblock_time TIMESTAMP,
-  onblock_time TIMESTAMP,
+  offblock_time TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:01',
+  onblock_time TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:01',
   duration VARCHAR(5),
   status VARCHAR(128),
   simulator VARCHAR(128),
