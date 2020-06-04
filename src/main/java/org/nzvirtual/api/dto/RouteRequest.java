@@ -3,7 +3,7 @@ package org.nzvirtual.api.dto;
 public class RouteRequest {
     private Long id;
     private String airline;
-    private int flightNumber;
+    private String flightNumber;
     private String atcIdent;
     private String departure;
     private String arrival;
@@ -16,7 +16,7 @@ public class RouteRequest {
     private int altitude;
     private String notes;
 
-    public RouteRequest(Long id, String airline, int flightNumber, String AtcIdent, String departure, String arrival, String days, String equipment, String departureTime, String arrivalTime, String duration, String route, int altitude, String notes) {
+    public RouteRequest(Long id, String airline, String flightNumber, String AtcIdent, String departure, String arrival, String days, String equipment, String departureTime, String arrivalTime, String duration, String route, int altitude, String notes) {
         this.id = 0L;
         if (id != null) {
             this.id = id;
@@ -52,11 +52,11 @@ public class RouteRequest {
         this.airline = airline;
     }
 
-    public int getFlightNumber() {
+    public String getFlightNumber() {
         return flightNumber;
     }
 
-    public void setFlightNumber(int flightNumber) {
+    public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
     }
 

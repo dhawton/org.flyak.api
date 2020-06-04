@@ -12,6 +12,7 @@ import org.nzvirtual.api.data.entity.User;
 import org.nzvirtual.api.data.repository.BookingRepository;
 import org.nzvirtual.api.data.repository.RouteRepository;
 import org.nzvirtual.api.data.repository.UserRepository;
+import org.nzvirtual.api.dto.BookingPersist;
 import org.nzvirtual.api.dto.BookingRequest;
 import org.nzvirtual.api.dto.GeneralStatusResponse;
 import org.nzvirtual.api.exception.GeneralException;
@@ -116,8 +117,18 @@ public class BookingController {
         if (optRoute.isEmpty())
             throw new GeneralException("Not Found", HttpStatus.NOT_FOUND);
 
-        booking.setUser(optUser.get());
-        booking.setRoute(optRoute.get());
+        BookingPersist bookingPersist = new BookingPersist(optUser.get(), optRoute.get(), bookingRequest.getPlannedTime());
+        booking.setUser(bookingPersist.getUser());
+        booking.setAirline(bookingPersist.getAirline().getIcao());
+        booking.setFlightNumber(bookingPersist.getFlight_number());
+        booking.setDeparture(bookingPersist.getDeparture());
+        booking.setArrival(bookingPersist.getArrival());
+        booking.setEquipment(bookingPersist.getEquipment());
+        booking.setDepartureTime(bookingPersist.getDepartureTime());
+        booking.setArrivalTime(bookingPersist.getArrivalTime());
+        booking.setDuration(bookingPersist.getDuration());
+        booking.setAtcident(bookingPersist.getAtcident());
+        booking.setPlannedDeparture(bookingPersist.getPlannedTime());
         bookingRepository.save(booking);
 
         return new ResponseEntity<>(new GeneralStatusResponse("Created"), HttpStatus.CREATED);
