@@ -38,7 +38,7 @@ CREATE TABLE logbook(
   fuel_start FLOAT(8, 2),
   fuel_end FLOAT(8, 2),
   distance_flown FLOAT(10, 1),
-  positions MEDIUMTEXT DEFAULT '[]',
+  positions MEDIUMTEXT,
 
   PRIMARY KEY(id)
 );
