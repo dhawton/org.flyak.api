@@ -1,52 +1,34 @@
-package org.nzvirtual.api.data.entity;
+package org.nzvirtual.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.nzvirtual.api.dto.BookingPersist;
+import org.nzvirtual.api.data.entity.*;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="bookings")
-public class Booking {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+public class BookingPersist {
     private User user;
-    @Column(name = "airline")
-    private String airline;
-    @Column(name = "flight_number")
-    private String flightNumber;
-    @OneToOne
-    @JoinColumn(name = "departure", referencedColumnName = "icao")
+    private Airline airline;
+    private String flight_number;
     private Airport departure;
-    @OneToOne
-    @JoinColumn(name = "arrival", referencedColumnName = "icao")
     private Airport arrival;
-    @OneToOne
-    @JoinColumn(name = "equipment", referencedColumnName = "icao")
     private Equipment equipment;
-    @Column(name = "departure_time")
     private String departureTime;
-    @Column(name = "arrival_time")
     private String arrivalTime;
-    @Column(name = "duration")
     private String duration;
-    @Column(name = "atcident")
     private String atcident;
-    @Column(name = "planned_departure", columnDefinition = "TIMESTAMP")
-    private LocalDateTime plannedDeparture;
+    private LocalDateTime plannedTime;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public BookingPersist(User user, Route route, LocalDateTime plannedTime) {
+        this.user = user;
+        this.airline = route.getAirline();
+        this.flight_number = route.getFlightNumber();
+        this.departure = route.getDeparture();
+        this.arrival = route.getArrival();
+        this.equipment = route.getEquipment();
+        this.departureTime = route.getDepartureTime();
+        this.arrivalTime = route.getArrivalTime();
+        this.duration = route.getDuration();
+        this.atcident = route.getAtcIdent();
+        this.plannedTime = plannedTime;
     }
 
     public User getUser() {
@@ -57,20 +39,20 @@ public class Booking {
         this.user = user;
     }
 
-    public String getAirline() {
+    public Airline getAirline() {
         return airline;
     }
 
-    public void setAirline(String airline) {
+    public void setAirline(Airline airline) {
         this.airline = airline;
     }
 
-    public String getFlightNumber() {
-        return flightNumber;
+    public String getFlight_number() {
+        return flight_number;
     }
 
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
+    public void setFlight_number(String flight_number) {
+        this.flight_number = flight_number;
     }
 
     public Airport getDeparture() {
@@ -129,11 +111,11 @@ public class Booking {
         this.atcident = atcident;
     }
 
-    public LocalDateTime getPlannedDeparture() {
-        return plannedDeparture;
+    public LocalDateTime getPlannedTime() {
+        return plannedTime;
     }
 
-    public void setPlannedDeparture(LocalDateTime plannedDeparture) {
-        this.plannedDeparture = plannedDeparture;
+    public void setPlannedTime(LocalDateTime plannedTime) {
+        this.plannedTime = plannedTime;
     }
 }

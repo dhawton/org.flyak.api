@@ -14,7 +14,7 @@ public class Route implements Serializable {
     @JoinColumn(name = "airline", referencedColumnName = "icao")
     private Airline airline;
     @Column(name = "flight_number")
-    private int flightNumber;
+    private String flightNumber;
     @Column(name = "atc_ident")
     private String atcIdent;
     @OneToOne
@@ -57,11 +57,11 @@ public class Route implements Serializable {
         this.airline = airline;
     }
 
-    public int getFlightNumber() {
+    public String getFlightNumber() {
         return flightNumber;
     }
 
-    public void setFlightNumber(int flightNumber) {
+    public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
     }
 

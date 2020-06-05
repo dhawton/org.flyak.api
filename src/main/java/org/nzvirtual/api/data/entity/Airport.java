@@ -1,5 +1,7 @@
 package org.nzvirtual.api.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -7,6 +9,7 @@ import java.io.Serializable;
 @Table(name="airports")
 public class Airport implements Serializable {
     @Id
+    @JsonIgnore
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
