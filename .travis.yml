@@ -4,6 +4,7 @@ jdk:
   - openjdk11
 service:
   - mysql
+  - redis-server
 
 env:
   - LINEVERSION=$(echo $TRAVIS_BRANCH | sed "s/line\///")
